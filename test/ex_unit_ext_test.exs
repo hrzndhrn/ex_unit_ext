@@ -1,8 +1,11 @@
 defmodule ExUnitExtTest do
   use ExUnit.Case
-  doctest ExUnitExt
 
   test "greets the world" do
-    assert ExUnitExt.hello() == :world
+    assert :world == :world
+  end
+
+  test "greets the mars" do
+    assert :world == :mars
   end
 end

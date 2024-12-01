@@ -1,18 +1,22 @@
 defmodule ExUnitExt do
-  @moduledoc """
-  Documentation for `ExUnitExt`.
-  """
+  @formatters %{
+    cli: ExUnit.CLIFormatter,
+    cli_ext: ExUnitExt.CLIExtFormatter
+  }
 
-  @doc """
-  Hello world.
+  def formatter(name, opts \\ [])
 
-  ## Examples
+  def formatter(:cli, _opts), do: ExUnit.CLIFormatter
 
-      iex> ExUnitExt.hello()
-      :world
+  def formatter(name, opts) do
+    case Map.fetch(@formatters, name) do
+      {:ok, formatter} ->
+        Application.put_env(:ex_unit_ex, :config, [{formatter, opts}])
+        formatter
 
-  """
-  def hello do
-    :world
+      :error ->
+        Mix.shell().info([:yellow, "warning: could not find formatter #{inspect(name)}"])
+        ExUnit.CLIFormatter
+    end
   end
 end
