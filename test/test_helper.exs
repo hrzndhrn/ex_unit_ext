@@ -1,1 +1,2 @@
-ExUnit.start(formatters: [ExUnitExt.formatter(:cli_ext)])
+# ExUnit.start(formatters: [ExUnitExt.formatter(:ext)])
+ExUnit.start()
