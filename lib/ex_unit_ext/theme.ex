@@ -264,12 +264,12 @@ defmodule ExUnitExt.Theme do
     |> IO.iodata_to_binary()
   end
 
-  @spec write(Escape.ansidata(), map()) :: String.t()
+  @spec write(Escape.ansidata(), map()) :: :ok
   def write(ansi, config) do
     Escape.write(ansi, theme: config.colors, emit: config.colors.enabled)
   end
 
-  @spec puts(Escape.ansidata(), map()) :: String.t()
+  @spec puts(Escape.ansidata(), map()) :: :ok
   def puts(ansi, config) do
     Escape.puts(ansi, theme: config.colors, emit: config.colors.enabled)
   end
@@ -285,7 +285,7 @@ defmodule ExUnitExt.Theme do
     end)
   end
 
-  @spec indent(String.t(), non_neg_integer()) :: String.t()
+  @spec indent(String.t() | list(), non_neg_integer()) :: String.t()
   def indent(output, indent \\ 1)
 
   def indent("", _indent), do: ""
@@ -332,12 +332,8 @@ defmodule ExUnitExt.Theme do
     puts([result, trace_test_result(test)], config)
   end
 
-  defp print_sign(result, config) when is_atom(result) do
+  defp print_sign(result, config) do
     write([result, sign(result, config)], config)
-  end
-
-  defp print_sign(config, state) do
-    write([state, sign(state, config)], config)
   end
 
   defp sign(name, config) do

@@ -27,7 +27,9 @@ defmodule Mix.Tasks.ExUnitExt.Test do
   end
 
   @options [switches: [ex_unit: :boolean, dbg_log: :boolean, theme: :string]]
-  defp config(args) do
+
+  @doc false
+  def config(args) do
     {opts, _rest} = OptionParser.parse!(args, @options)
     opts = Keyword.take(opts, Keyword.keys(@options[:switches]))
     args = delete_switches(args, @options[:switches])
