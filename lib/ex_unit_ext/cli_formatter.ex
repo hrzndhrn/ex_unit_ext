@@ -7,10 +7,8 @@ defmodule ExUnitExt.CliFormatter do
   def init(opts) do
     opts = Keyword.merge(opts, Application.get_env(:ex_unit_ext, :config, []))
 
-    printer = Theme.printer(opts)
-
     config = %{
-      printer: printer,
+      printer: Theme.printer(opts),
       slowest: opts[:slowest],
       slowest_modules: opts[:slowest_modules],
       test_counter: %{},
@@ -25,8 +23,6 @@ defmodule ExUnitExt.CliFormatter do
 
     {:ok, config}
   end
-
-  defp print(event, %{printer: printer}), do: printer.(event)
 
   def handle_cast({:suite_started, _opts}, state) do
     print(:suite_started, state)
@@ -134,6 +130,8 @@ defmodule ExUnitExt.CliFormatter do
   def handle_cast(_, state) do
     {:noreply, state}
   end
+
+  defp print(event, %{printer: printer}), do: printer.(event)
 
   defp update_test_counter(%{test_counter: test_counter} = state, test) do
     test_counter = Map.update(test_counter, test.tags.test_type, 1, fn counter -> counter + 1 end)

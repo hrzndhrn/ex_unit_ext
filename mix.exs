@@ -7,8 +7,7 @@ defmodule ExUnitExt.MixProject do
       version: "0.1.0",
       elixir: "~> 1.17",
       start_permanent: Mix.env() == :prod,
-      deps: deps(),
-      aliases: aliases()
+      deps: deps()
     ]
   end
 
@@ -21,12 +20,9 @@ defmodule ExUnitExt.MixProject do
   defp deps do
     [
       {:conv_case, "~> 0.1"},
-      {:escape, "~> 0.2"}
+      {:escape, "~> 0.2"},
+      # dev/test
+      {:recode, "~> 0.7"}
     ]
-  end
-
-  defp aliases do
-    []
-    [test: "ex_unit_ext.test"]
   end
 end

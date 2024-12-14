@@ -3,7 +3,6 @@ defmodule ExUnitExt.Theme.Xmas do
 
   use ExUnitExt.Theme
 
-
   @signs %{
     success: "🎄",
     failure: "🔥",

@@ -3,15 +3,30 @@ defmodule Mix.Tasks.ExUnitExt.Test do
 
   @moduledoc """
   #{@shortdoc}
+
+  To use `ex_unit_ext.test`, it is recommended to add the alias
+  `test:  ex_unit_ext.test` to `mix.exs` and run tests with `mix test` as usual.
+
+  The wrapper supports all options of the `mix test` task.
   """
 
   use Mix.Task
 
+  @impl true
   def run(args) do
+    if Mix.env() != :test do
+      Mix.raise("""
+      "mix ex_unit_ext.test" is running in the \"#{Mix.env()}\" environment.
+
+      It is recommended to add the alias "test:  ex_unit_ext.test" to "mix.exs"
+      and run tests with "mix test" as usual.
+      """)
+    end
+
     Mix.Task.run("test", config(args))
   end
 
-  @options [switches: [dbg_log: :boolean, theme: :string]]
+  @options [switches: [ex_unit: :boolean, dbg_log: :boolean, theme: :string]]
   defp config(args) do
     {opts, _rest} = OptionParser.parse!(args, @options)
     opts = Keyword.take(opts, Keyword.keys(@options[:switches]))
@@ -29,7 +44,7 @@ defmodule Mix.Tasks.ExUnitExt.Test do
     end
   end
 
-  def delete_switches(args, switches) do
+  defp delete_switches(args, switches) do
     Enum.reduce(switches, args, fn {switch, type}, args ->
       switch = switch |> to_string() |> ConvCase.to_kebab_case()
       args = delete_switch(args, "--#{switch}", type)
@@ -40,19 +55,19 @@ defmodule Mix.Tasks.ExUnitExt.Test do
     end)
   end
 
-  def delete_switch(args, switch, type, acc \\ [])
+  defp delete_switch(args, switch, type, acc \\ [])
 
-  def delete_switch([], _switch, _type, acc), do: Enum.reverse(acc)
+  defp delete_switch([], _switch, _type, acc), do: Enum.reverse(acc)
 
-  def delete_switch([switch, _value | rest], switch, :string, acc) do
+  defp delete_switch([switch, _value | rest], switch, :string, acc) do
     delete_switch(rest, :string, acc)
   end
 
-  def delete_switch([switch | rest], switch, :boolean, acc) do
+  defp delete_switch([switch | rest], switch, :boolean, acc) do
     delete_switch(rest, switch, :boolean, acc)
   end
 
-  def delete_switch([item | rest], switch, type, acc) do
+  defp delete_switch([item | rest], switch, type, acc) do
     delete_switch(rest, switch, type, [item | acc])
   end
 end

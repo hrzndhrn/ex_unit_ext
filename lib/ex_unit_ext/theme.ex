@@ -90,7 +90,12 @@ defmodule ExUnitExt.Theme do
         theme
 
       :error ->
-        Mix.Shell.IO.info([:yellow, "Theme '#{name}' not found. Falling back to default theme.\n"])
+        info = """
+        Theme #{inspect(name)} not found. Falling back to default theme.
+        Available themes: "#{@themes |> Map.keys() |> Enum.join(~s|", "|)}"
+        """
+
+        Mix.Shell.IO.info([:yellow, info])
 
         Theme
     end
@@ -227,6 +232,7 @@ defmodule ExUnitExt.Theme do
 
   ## helpers
 
+  @spec format_us(us :: integer()) :: String.t()
   def format_us(us) do
     us = div(us, 10)
 
@@ -238,31 +244,38 @@ defmodule ExUnitExt.Theme do
     end
   end
 
+  @spec normalize_us(us :: integer()) :: integer()
   def normalize_us(us) do
     div(us, 1000)
   end
 
+  @spec pluralize(count :: integer(), singular :: String.t()) :: String.t()
   def pluralize(1, singular), do: singular
   def pluralize(_, singular), do: singular |> to_string() |> ExUnit.plural_rule()
 
+  @spec pluralize(count :: integer(), singular :: String.t(), plural :: String.t()) :: String.t()
   def pluralize(1, singular, _plural), do: singular
   def pluralize(_, _singular, plural), do: plural
 
+  @spec format(Escape.ansidata(), map()) :: String.t()
   def format(ansi, config) do
     ansi
     |> Escape.format(theme: config.colors, emit: config.colors.enabled)
     |> IO.iodata_to_binary()
   end
 
+  @spec write(Escape.ansidata(), map()) :: String.t()
   def write(ansi, config) do
     Escape.write(ansi, theme: config.colors, emit: config.colors.enabled)
   end
 
+  @spec puts(Escape.ansidata(), map()) :: String.t()
   def puts(ansi, config) do
     Escape.puts(ansi, theme: config.colors, emit: config.colors.enabled)
   end
 
-  def colorize_doc(escape, doc, config) do
+  @spec color_doc(Escape.ansicode(), Inspect.Algebra.t(), map()) :: Inspect.Algebra.t()
+  def color_doc(escape, doc, config) do
     Escape.color_doc(doc, escape, theme: config.colors, emit: config.colors.enabled)
   end
 
@@ -272,6 +285,7 @@ defmodule ExUnitExt.Theme do
     end)
   end
 
+  @spec indent(String.t(), non_neg_integer()) :: String.t()
   def indent(output, indent \\ 1)
 
   def indent("", _indent), do: ""
@@ -300,6 +314,7 @@ defmodule ExUnitExt.Theme do
 
   ## print and format
 
+  @spec print_filters(map(), atom()) :: :ok
   def print_filters(opts, key) do
     case opts[key] do
       [] -> :ok
@@ -487,19 +502,19 @@ defmodule ExUnitExt.Theme do
   defp formatter(:diff_enabled?, _, config), do: config.colors.enabled
 
   defp formatter(:diff_delete, doc, config) do
-    colorize_doc(:diff_delete, doc, config)
+    color_doc(:diff_delete, doc, config)
   end
 
   defp formatter(:diff_delete_whitespace, doc, config) do
-    colorize_doc(:diff_delete_whitespace, doc, config)
+    color_doc(:diff_delete_whitespace, doc, config)
   end
 
   defp formatter(:diff_insert, doc, config) do
-    colorize_doc(:diff_insert, doc, config)
+    color_doc(:diff_insert, doc, config)
   end
 
   defp formatter(:diff_insert_whitespace, doc, config) do
-    colorize_doc(:diff_insert_whitespace, doc, config)
+    color_doc(:diff_insert_whitespace, doc, config)
   end
 
   defp formatter(:blame_diff, msg, config) do

@@ -3,7 +3,6 @@ defmodule ExUnitExt.Theme.Hearts do
 
   use ExUnitExt.Theme
 
-
   @signs %{
     success: {:random, ["💚 ", "💙 ", "💜 ", "💛 ", "❤️ "]},
     failure: "🐛 ",
