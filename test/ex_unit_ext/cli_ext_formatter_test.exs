@@ -3,6 +3,12 @@ defmodule ExUnitExt.CLIExtFormatterTest do
 
   import ExUnit.CaptureIO
 
+  version = Version.parse!(System.version())
+
+  if not Version.match?(version, "~> 1.17.0") do
+    @moduletag :skip
+  end
+
   describe "formatter" do
     test "receives suite started event" do
       formatter = formatter()
