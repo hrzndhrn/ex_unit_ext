@@ -14,5 +14,6 @@ defmodule ExUnitExt.Theme.Hearts do
     invalid: "🐞 "
   }
 
+  @impl true
   def signs(opts), do: Theme.signs(opts, @signs)
 end

@@ -70,7 +70,7 @@ defmodule ExUnitExt.MixProject do
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
       {:ex_doc, "~> 0.25", only: :dev, runtime: false},
       {:excoveralls, "~> 0.15", only: :test},
-      {:recode, "~> 0.7"}
+      {:recode, "~> 0.7", only: :dev}
     ]
   end
 end

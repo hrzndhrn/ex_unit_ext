@@ -69,10 +69,16 @@ defmodule ExUnitExt.Theme do
 
       @behaviour ExUnitExt.Theme
 
+      @impl true
       defdelegate colors(opts), to: Theme
+
+      @impl true
       defdelegate signs(opts), to: Theme
+
+      @impl true
       defdelegate print(event, config), to: Theme
 
+      @impl true
       def enabled?, do: IO.ANSI.enabled?()
 
       defoverridable colors: 1, signs: 1, print: 2, enabled?: 0

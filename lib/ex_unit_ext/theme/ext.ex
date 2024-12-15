@@ -12,10 +12,12 @@ defmodule ExUnitExt.Theme.Ext do
     invalid: "?"
   }
 
+  @impl true
   def signs(opts) do
     Theme.signs(opts, @signs)
   end
 
+  @impl true
   def print(:suite_started, config) do
     message =
       "Running ExUnit with seed: #{config.seed}, max_cases: #{config.max_cases}"
