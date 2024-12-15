@@ -9,7 +9,7 @@ defmodule ExUnitExt.MixProject do
       app: :ex_unit_ext,
       name: "ExUnitExt",
       version: @version,
-      elixir: "~> 1.16",
+      elixir: "~> 1.13",
       source_url: @source_url,
       start_permanent: Mix.env() == :prod,
       dialyzer: dialyzer(),
