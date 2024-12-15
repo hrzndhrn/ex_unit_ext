@@ -9,8 +9,8 @@ defmodule ExUnitExt.CliFormatter do
 
     config = %{
       printer: Theme.printer(opts),
-      slowest: opts[:slowest],
-      slowest_modules: opts[:slowest_modules],
+      slowest: opts[:slowest] || 0,
+      slowest_modules: opts[:slowest_modules] || 0,
       test_counter: %{},
       test_timings: [],
       failures: [],
