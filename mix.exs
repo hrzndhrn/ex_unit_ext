@@ -7,6 +7,7 @@ defmodule ExUnitExt.MixProject do
   def project do
     [
       app: :ex_unit_ext,
+      name: "ExUnitExt",
       version: @version,
       elixir: "~> 1.16",
       source_url: @source_url,
@@ -46,7 +47,7 @@ defmodule ExUnitExt.MixProject do
 
   def docs do
     [
-      main: "GlobEx",
+      main: "ExUnitExt",
       source_ref: "v#{@version}",
       formatters: ["html"]
     ]

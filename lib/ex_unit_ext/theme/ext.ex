@@ -1,5 +1,7 @@
 defmodule ExUnitExt.Theme.Ext do
-  @moduledoc false
+  @moduledoc """
+  The `ext` theme.
+  """
 
   use ExUnitExt.Theme
 

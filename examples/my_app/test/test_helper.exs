@@ -1,1 +1,1 @@
-ExUnitExt.start(theme: "ext")
+ExUnit.start()

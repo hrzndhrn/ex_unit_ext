@@ -1,5 +1,9 @@
 defmodule ExUnitExt.Theme.Block do
-  @moduledoc false
+  @moduledoc """
+  The `block` theme.
+
+  This theme replaces the `.`, `!`, `*` and `?` by colored blocks.
+  """
 
   use ExUnitExt.Theme
 

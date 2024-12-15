@@ -1,5 +1,9 @@
 defmodule ExUnitExt.Theme.Hearts do
-  @moduledoc false
+  @moduledoc """
+  The `hearts` theme.
+
+  This theme brings even more hearts into the warmest community.
+  """
 
   use ExUnitExt.Theme
 

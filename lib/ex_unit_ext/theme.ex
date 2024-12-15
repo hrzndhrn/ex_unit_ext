@@ -11,7 +11,7 @@ defmodule ExUnitExt.Theme do
   @default_colors %{
     # CLI formatter
     success: :green,
-    invalid: :yellow,
+    invalid: :magenta,
     skipped: :yellow,
     failure: :red,
     warning: :yellow,
@@ -40,9 +40,28 @@ defmodule ExUnitExt.Theme do
     "ext" => Theme.Ext
   }
 
+  @doc """
+  Returns the colors map used to format the output.
+  """
   @callback colors(opts :: keyword()) :: map()
+
+  @doc """
+  Returns the signs map used to show the results.
+  """
   @callback signs(opts :: keyword()) :: map()
+
+  @doc """
+  Called by the formatter to print events.
+  """
   @callback print(event :: atom() | tuple(), config :: map()) :: :ok
+
+  @doc """
+  Returns a boolean indicating if the theme is enabled.
+
+  The default implementation returns `IO.ANSI.enabled?()`. If a theme not
+  enabled the default theme is used.
+  """
+  @callback enabled?() :: boolean()
 
   defmacro __using__(_opts) do
     quote do
@@ -54,7 +73,9 @@ defmodule ExUnitExt.Theme do
       defdelegate signs(opts), to: Theme
       defdelegate print(event, config), to: Theme
 
-      defoverridable colors: 1, signs: 1, print: 2
+      def enabled?, do: IO.ANSI.enabled?()
+
+      defoverridable colors: 1, signs: 1, print: 2, enabled?: 0
     end
   end
 
@@ -65,7 +86,7 @@ defmodule ExUnitExt.Theme do
   """
   @spec printer(opts :: keyword()) :: (event :: atom() | tuple() -> :ok)
   def printer(opts) do
-    theme = theme(opts[:theme])
+    theme = get(opts[:theme])
     config = config(theme, opts)
     fn event -> theme.print(event, config) end
   end
@@ -82,25 +103,6 @@ defmodule ExUnitExt.Theme do
     Map.merge(config, opts)
   end
 
-  defp theme(nil), do: Theme
-
-  defp theme(name) do
-    case Map.fetch(@themes, name) do
-      {:ok, theme} ->
-        theme
-
-      :error ->
-        info = """
-        Theme #{inspect(name)} not found. Falling back to default theme.
-        Available themes: "#{@themes |> Map.keys() |> Enum.join(~s|", "|)}"
-        """
-
-        Mix.Shell.IO.info([:yellow, info])
-
-        Theme
-    end
-  end
-
   @doc """
   Returns a theme module for the given `name` or the default theme.
 
@@ -113,10 +115,15 @@ defmodule ExUnitExt.Theme do
   def get(name) do
     case Map.fetch(@themes, name) do
       {:ok, theme} ->
-        theme
+        if theme.enabled?(), do: theme, else: Theme
 
       :error ->
-        Mix.Shell.IO.info([:yellow, "Theme '#{name}' not found. Falling back to default theme.\n"])
+        info = """
+        Theme #{inspect(name)} not found. Falling back to default theme.
+        Available themes: "#{@themes |> Map.keys() |> Enum.join(~s|", "|)}"
+        """
+
+        Mix.Shell.IO.info([:yellow, info])
 
         Theme
     end
