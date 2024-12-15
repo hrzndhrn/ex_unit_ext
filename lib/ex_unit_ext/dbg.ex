@@ -5,6 +5,22 @@ defmodule ExUnitExt.Dbg do
 
   require Logger
 
+  @syntax_colors [
+    atom: :cyan,
+    binary: :default_color,
+    boolean: :magenta,
+    charlist: :yellow,
+    list: :default_color,
+    map: :default_color,
+    nil: :magenta,
+    number: :yellow,
+    string: :green,
+    tuple: :default_color,
+    variable: :light_cyan,
+    call: :default_color,
+    operator: :default_color
+  ]
+
   @spec dbg(Macro.t(), Macro.t(), Macro.Env.t(), keyword()) :: Macro.t()
   def dbg(code, options, %Macro.Env{} = env, opts) do
     case env.context do
@@ -150,8 +166,7 @@ defmodule ExUnitExt.Dbg do
   @doc false
   def __dbg__(header_string, to_debug, options) do
     ansi_enabled? = IO.ANSI.enabled?()
-    syntax_colors = if ansi_enabled?, do: IO.ANSI.syntax_colors(), else: []
-    options = Keyword.merge([width: 80, pretty: true, syntax_colors: syntax_colors], options)
+    options = Keyword.merge([width: 80, pretty: true, syntax_colors: @syntax_colors], options)
 
     location = if options[:print_location] == false, do: [], else: [header_string, :reset, "\n"]
     {formatted, result} = dbg_format_ast_to_debug(to_debug, options)
