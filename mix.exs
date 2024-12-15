@@ -8,6 +8,7 @@ defmodule ExUnitExt.MixProject do
     [
       app: :ex_unit_ext,
       name: "ExUnitExt",
+      description: "A small extension to `ExUnit` to add some extra features.",
       version: @version,
       elixir: "~> 1.13",
       source_url: @source_url,
